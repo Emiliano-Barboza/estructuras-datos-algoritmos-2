@@ -8,17 +8,17 @@ int main()
 {
     int size, id, price, lowerPrices;
     cin >> size;
-    HeapSort<Item> * maxHeap = new HeapSort<Item>(size);
+    HeapSort<Item> * heapSort = new HeapSort<Item>(size);
 
     for (int i = 0; i < size; i++)
     {
         cin >> id;
         cin >> price;
         Item item(id, price);
-        maxHeap->insert(item);
+        heapSort->insert(item);
     }
 
-    Item *items = maxHeap->sort();
+    Item *items = heapSort->sort();
     cin >> lowerPrices;
     int * ids = new int[size]();
     int index = 0;

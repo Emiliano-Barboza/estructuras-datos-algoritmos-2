@@ -49,7 +49,7 @@ private:
         }
     }
 
-    void heapify(int currentIndex, int parentIndex)
+    void bubbleDown(int currentIndex, int parentIndex)
     {
         int maximum = parentIndex;
         int rightIndex = this->getRightChild(parentIndex);
@@ -65,7 +65,7 @@ private:
 
         if (maximum != parentIndex) {
             this->swap(parentIndex, maximum);
-            heapify(currentIndex, maximum);
+            this->bubbleDown(currentIndex, maximum);
         }
     }
 
@@ -96,7 +96,7 @@ public:
             T aux = this->elements[0];
             this->elements[0] = this->elements[i];
             this->elements[i] = aux;
-            heapify(i, 0);
+            this->bubbleDown(i, 0);
         }
         return this->elements;
     }
