@@ -5,9 +5,9 @@ template <class T>
 class Heap
 {
 public:
- virtual ~Heap() = default;
+   virtual ~Heap() = default;
 
- /**
+   /**
    * Insert new value in the heap.
    * @pre The heap is not full.
    */
@@ -23,7 +23,22 @@ public:
      * Returns the top element and delete from top.
      * @pre Heap not empty.
      */
-    virtual void remove() = 0;
+    virtual T remove() = 0;
+
+    /**
+     * Returns true if value exists.
+     */
+    virtual bool exists(T value) = 0;
+
+    /**
+     * Returns the index of the value, -1 if not exists.
+     */
+    virtual int indexOf(T value) = 0;
+
+    /**
+        * Returns the index of the value, -1 if not exists.
+        */
+    virtual T get(int index) = 0;
 };
 
 #endif
