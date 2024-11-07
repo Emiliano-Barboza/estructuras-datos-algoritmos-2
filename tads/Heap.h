@@ -38,7 +38,7 @@ public:
     /**
         * Returns the index of the value, -1 if not exists.
         */
-    virtual T get(int index) = 0;
+    virtual T& get(int index) = 0;
 };
 
 #endif

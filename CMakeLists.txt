@@ -33,4 +33,6 @@ add_executable(estructuras_datos_algoritmos_2
         tads/ExtendedPriorityQueue.cpp
         tads/PriorityQueue.h
         tads/MaxHeap.cpp
-        models/Priority.cpp)
+        models/Priority.h
+        models/Order.cpp
+        tads/MinHeap.cpp)
