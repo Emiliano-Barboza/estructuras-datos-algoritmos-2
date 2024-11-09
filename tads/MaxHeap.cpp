@@ -9,14 +9,12 @@ template <class T>
 class MaxHeap: public Heap<T> {
 private:
     int size;
-    int lastElement;
+    int nextIndex;
     T* elements;
-    bool isFull () {
-        return this->lastElement > this->size;
-    }
+    int rootIndex = 0;
 
-    bool empty () {
-        return this->lastElement == 0;
+    bool isFull () {
+        return this->nextIndex > this->size;
     }
 
     int getLeftChild(int parentIndex) {
@@ -27,25 +25,29 @@ private:
         return  2 * parentIndex + 2;
     }
 
-    void swap(int parentIndex, int childIndex) {
-        T aux = this->elements[parentIndex];
-        this->elements[parentIndex] = this->elements[childIndex];
-        this->elements[childIndex] = aux;
+    int getParentIndex(int childIndex) {
+        return  (childIndex -1 ) / 2;
     }
 
 public:
     MaxHeap(int size) {
         this->elements = new T[size];
         this->size = size;
-        this->lastElement = 0;
+        this->nextIndex = 0;
     }
 
-    int getParentIndex(int childIndex) {
-        return  (childIndex -1 ) / 2;
+    bool empty () {
+        return this->nextIndex == 0;
+    }
+
+    void swap(int parentIndex, int childIndex) {
+        T aux = this->elements[parentIndex];
+        this->elements[parentIndex] = this->elements[childIndex];
+        this->elements[childIndex] = aux;
     }
 
     void bubbleUp(int index) {
-        if (index > 0) {
+        if (index > this->rootIndex) {
             int parentIndex = this->getParentIndex(index);
             T parent = this->elements[parentIndex];
             T child = this->elements[index];
@@ -56,31 +58,31 @@ public:
         }
     }
 
-    void bubbleDown(int currentIndex, int parentIndex)
+    void bubbleDown(int index)
     {
-        int maximum = parentIndex;
-        int rightIndex = this->getRightChild(parentIndex);
-        int leftIndex = this->getLeftChild(parentIndex);
+        int maximum = index;
+        int leftIndex = this->getLeftChild(index);
+        if (leftIndex < this->nextIndex) {
+            if (this->elements[leftIndex] > this->elements[maximum]) {
+                maximum = leftIndex;
+            }
+            int rightIndex = this->getRightChild(index);
+            if (rightIndex < this->nextIndex && this->elements[rightIndex] > this->elements[maximum]) {
+                maximum = rightIndex;
+            }
 
-        if (leftIndex < currentIndex && this->elements[leftIndex] > this->elements[maximum]) {
-            maximum = leftIndex;
-        }
-
-        if (rightIndex < currentIndex && this->elements[rightIndex] > this->elements[maximum]) {
-            maximum = rightIndex;
-        }
-
-        if (maximum != parentIndex) {
-            this->swap(parentIndex, maximum);
-            this->bubbleDown(currentIndex, maximum);
+            if (maximum != index) {
+                this->swap(index, maximum);
+                this->bubbleDown(maximum);
+            }
         }
     }
 
     void insert(T value) override {
         assert(!this->isFull());
-        this->elements[this->lastElement] = value;
-        this->bubbleUp(this->lastElement);
-        ++this->lastElement;
+        this->elements[this->nextIndex] = value;
+        this->bubbleUp(this->nextIndex);
+        ++this->nextIndex;
     };
 
     T top() override {
@@ -91,15 +93,15 @@ public:
     T remove() override {
         assert(!this->empty());
         T value = this->elements[0];
-        this->swap(0, this->lastElement - 1);
-        --this->lastElement;
-        this->bubbleDown(0, 0);// TODO CHECK THIS
+        this->swap(this->rootIndex, this->nextIndex - 1);
+        --this->nextIndex;
+        this->bubbleDown(this->rootIndex);
         return value;
     }
 
     bool exists(T value) override {
         bool exists = false;
-        for (int i = 0; i < this->lastElement && !exists; ++i) {
+        for (int i = 0; i < this->nextIndex && !exists; ++i) {
             exists = this->elements[i] == value;
         }
         return exists;
@@ -107,7 +109,7 @@ public:
 
     int indexOf(T value) override {
         int index = -1;
-        for (int i = 0; i < this->lastElement && index < 0; ++i) {
+        for (int i = 0; i < this->nextIndex && index < 0; ++i) {
             if (this->elements[i] == value) {
                 index = i;
             }
@@ -116,15 +118,8 @@ public:
     }
 
     T& get(int index) override {
-        assert(index >= 0 && index < this->lastElement);
+        assert(index >= 0 && index < this->nextIndex);
         return this->elements[index];
-    }
-
-    void showHeap()  {
-        cout << "showHeap" << endl;
-        for (int i = 0; i < this->lastElement; ++i) {
-            cout << "ID:" << this->elements[i].id << " Priority: " << this->elements[i].priority << endl;
-        }
     }
 };
 

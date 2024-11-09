@@ -1,5 +1,5 @@
 #include <cassert>
-
+#include "MaxHeap.cpp"
 #include "Heap.h"
 #ifndef HEAP_SORT
 #define HEAP_SORT
@@ -8,97 +8,45 @@ using namespace std;
 template <class T>
 class HeapSort: public Heap<T> {
 private:
-    int size{};
-    int lastElement;
-    T* elements;
-    bool isFull () {
-        return this->lastElement > this->size;
-    }
-
-    bool empty () {
-        return this->lastElement == 0;
-    }
-
-    int getParentIndex(int childIndex) {
-        return  (childIndex -1 ) / 2;
-    }
-
-    int getLeftChild(int parentIndex) {
-        return  2 * parentIndex + 1;
-    }
-
-    int getRightChild(int parentIndex) {
-        return  2 * parentIndex + 2;
-    }
-
-    void swap(int parentIndex, int childIndex) {
-        T aux = this->elements[parentIndex];
-        this->elements[parentIndex] = this->elements[childIndex];
-        this->elements[childIndex] = aux;
-    }
-
-    void bubbleUp(int index) {
-        if (index > 0) {
-            int parentIndex = this->getParentIndex(index);
-            T parent = this->elements[parentIndex];
-            T child = this->elements[index];
-            if (child > parent) {
-                this->swap(parentIndex, index);
-                this->bubbleUp(parentIndex);
-            }
-        }
-    }
-
-    void bubbleDown(int currentIndex, int parentIndex)
-    {
-        int maximum = parentIndex;
-        int rightIndex = this->getRightChild(parentIndex);
-        int leftIndex = this->getLeftChild(parentIndex);
-
-        if (leftIndex < currentIndex && this->elements[leftIndex] > this->elements[maximum]) {
-            maximum = leftIndex;
-        }
-
-        if (rightIndex < currentIndex && this->elements[rightIndex] > this->elements[maximum]) {
-            maximum = rightIndex;
-        }
-
-        if (maximum != parentIndex) {
-            this->swap(parentIndex, maximum);
-            this->bubbleDown(currentIndex, maximum);
-        }
-    }
+    MaxHeap<T> heap;
+    int size;
 
 public:
-    HeapSort(int size) {
-        this->elements = new T[size];
+    HeapSort(int size) : heap(size) {
         this->size = size;
-        this->lastElement = 0;
     }
 
     void insert(T value) override {
-        assert(!this->isFull());
-        this->elements[this->lastElement] = value;
-        this->bubbleUp(this->lastElement);
-        ++this->lastElement;
+        this->heap.insert(value);
     };
 
     T top() override {
-        assert(!this->empty());
-        return this->elements[0];
+        return this->heap.top();
     }
 
-    void remove() override {}
+    T remove() override {
+        return this->heap.remove();
+    }
+
+    bool exists(T value) override {
+        return this->heap.exists(value);
+    }
+
+    int indexOf(T value) override {
+        return this->heap.indexOf(value);
+    }
+
+    T & get(int index) override {
+        return this->heap.get(index);
+    }
 
     T* sort() {
-        assert(!this->empty());
-        for (int i = this->size - 1; i > 0; i--) {
-            T aux = this->elements[0];
-            this->elements[0] = this->elements[i];
-            this->elements[i] = aux;
-            this->bubbleDown(i, 0);
+        assert(!this->heap.empty());
+        T* sorted = new T[this->size];
+        for (int i = this->size - 1; i >= 0; i--) {
+            sorted[i] = this->heap.remove();
         }
-        return this->elements;
+        return sorted;
     }
 };
 
