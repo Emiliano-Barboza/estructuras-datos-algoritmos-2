@@ -13,6 +13,7 @@ private:
     int nextIndex;
     T* elements;
     int rootIndex = 0;
+
     bool isFull () {
         return this->nextIndex > this->size;
     }
@@ -25,10 +26,8 @@ private:
         return  2 * parentIndex + 2;
     }
 
-    void swap(int parentIndex, int childIndex) {
-        T aux = this->elements[parentIndex];
-        this->elements[parentIndex] = this->elements[childIndex];
-        this->elements[childIndex] = aux;
+    int getParentIndex(int childIndex) {
+        return  (childIndex -1 ) / 2;
     }
 
 public:
@@ -38,16 +37,18 @@ public:
         this->nextIndex = 0;
     }
 
+    void swap(int parentIndex, int childIndex) {
+        T aux = this->elements[parentIndex];
+        this->elements[parentIndex] = this->elements[childIndex];
+        this->elements[childIndex] = aux;
+    }
+
     bool empty () {
         return this->nextIndex == 0;
     }
 
-    int getParentIndex(int childIndex) {
-        return  (childIndex -1 ) / 2;
-    }
-
     void bubbleUp(int index) {
-        if (index > 0) {
+        if (index > this->rootIndex) {
             int parentIndex = this->getParentIndex(index);
             T parent = this->elements[parentIndex];
             T child = this->elements[index];
@@ -93,7 +94,6 @@ public:
 
     T remove() override {
         assert(!this->empty());
-
         T value = this->elements[0];
         this->swap(this->rootIndex, this->nextIndex - 1);
         --this->nextIndex;

@@ -25,8 +25,8 @@ int main()
     while (lowerPrices > 0) {
         id = items[index].id;
         if (ids[id] == 0) {
-            cout << items[index].id << '\n';
             ids[id] = 1;
+            cout << items[index].id << '\n';
             lowerPrices--;
         }
         index++;
