@@ -23,7 +23,9 @@ public:
     }
     bool operator<(const Order& other) const
     {
-        return this->priority < other.priority || this->takeAway > other.takeAway;
+        return this->priority < other.priority ||
+               (this->priority == other.priority && this->takeAway > other.takeAway) ||
+               (this->priority == other.priority && this->takeAway == other.takeAway && this->id < other.id);
     }
     bool operator==(const Order& other) const
     {

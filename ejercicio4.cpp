@@ -35,7 +35,7 @@ int main()
         }else if (operationType == "C") {
             cin >> id;
             Order order(id);
-            orderQueue->changePriority(order, true);
+            orderQueue->changePriority(order);
         }
     }
 

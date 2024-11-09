@@ -12,6 +12,7 @@ private:
     int size;
     int nextIndex;
     T* elements;
+    int rootIndex = 0;
     bool isFull () {
         return this->nextIndex > this->size;
     }
@@ -73,7 +74,7 @@ public:
 
             if (minimum != index) {
                 this->swap(index, minimum);
-                this->bubbleDown(index);
+                this->bubbleDown(minimum);
             }
         }
     }
@@ -92,11 +93,11 @@ public:
 
     T remove() override {
         assert(!this->empty());
-        int rootIndex = 0;
+
         T value = this->elements[0];
-        this->swap(rootIndex, this->nextIndex - 1);
+        this->swap(this->rootIndex, this->nextIndex - 1);
         --this->nextIndex;
-        this->bubbleDown(rootIndex);
+        this->bubbleDown(this->rootIndex);
         return value;
     }
 
@@ -121,17 +122,6 @@ public:
     T& get(int index) override {
         assert(index >= 0 && index < this->nextIndex);
         return this->elements[index];
-    }
-
-    void showHeap()  {
-        cout << "showHeap" << endl;
-        // while (this->nextIndex > 0) {
-        //     T removed = this->remove();
-        //     removed.toString();
-        // }
-        for (int i = 0; i < this->nextIndex; ++i) {
-            cout << this->elements[i].id << " " << this->elements[i].priority << " " << (this->elements[i].takeAway ? "true" : "false") <<  " " << this->elements[i].items << endl;
-        }
     }
 };
 

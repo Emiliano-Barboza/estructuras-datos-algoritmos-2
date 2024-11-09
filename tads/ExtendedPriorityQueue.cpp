@@ -4,42 +4,34 @@
 template <class T, class V>
 class ExtendedPriorityQueue: PriorityQueue<T> {
 private:
-    MinHeap<T> maxHeap;
+    MinHeap<T> heap;
 public:
-    ExtendedPriorityQueue(int size) : maxHeap(size) {}
+    ExtendedPriorityQueue(int size) : heap(size) {}
 
     virtual ~ExtendedPriorityQueue() = default;
 
     void enqueue(T value) override {
-        this->maxHeap.insert(value);
+        this->heap.insert(value);
     };
 
     T dequeue() override {
-        return this->maxHeap.remove();
+        return this->heap.remove();
     }
 
     T peek() override {
-        return this->maxHeap.top();
+        return this->heap.top();
     }
 
     /**
      * Changes the value priority in the queue.
      * @pre: the value must be in the queue.
      */
-    void changePriority(const T& value, V newPriority) {
-        int index = this->maxHeap.indexOf(value);
+    void changePriority(const T& value) {
+        int index = this->heap.indexOf(value);
         assert(index >= 0);
-        T valueToUpdate = this->maxHeap.get(index);
-        V previousPriority = valueToUpdate.getPriority();
-        if (newPriority != previousPriority) {
-            //valueToUpdate.setPriority(newPriority);
-            if (newPriority > previousPriority) {
-                this->maxHeap.bubbleUp(index);
-            } else {
-                int parentIndex = this->maxHeap.getParentIndex(index);
-                //this->maxHeap.bubbleDown(index, parentIndex);
-            }
-        }
+        T& valueToUpdate = this->heap.get(index);
+        valueToUpdate.takeAway = true;
+        this->heap.bubbleUp(index);
     };
 
     /**
@@ -47,22 +39,18 @@ public:
      * @pre: the value must be in the queue.
      */
     void deleteElement(const T& value) {
-        int index = this->maxHeap.indexOf(value);
+        int index = this->heap.indexOf(value);
         assert(index >= 0);
         if (index > 0) {
-            T top = this->maxHeap.top();
-            T& newTop = this->maxHeap.get(index);
+            T top = this->heap.top();
+            T& newTop = this->heap.get(index);
             newTop.priority = top.priority - 1;
-            this->maxHeap.bubbleUp(index);
+            this->heap.bubbleUp(index);
         }
-        T removed = this->maxHeap.remove();
+        T removed = this->heap.remove();
     };
 
     bool empty () {
-        return this->maxHeap.empty();
-    }
-
-    void showQueue() {
-        this->maxHeap.showHeap();
+        return this->heap.empty();
     }
 };
