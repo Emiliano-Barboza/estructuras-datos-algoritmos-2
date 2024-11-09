@@ -43,8 +43,10 @@ public:
     T* sort() {
         assert(!this->heap.empty());
         T* sorted = new T[this->size];
-        for (int i = this->size - 1; i >= 0; i--) {
-            sorted[i] = this->heap.remove();
+        int index = this->size - 1;
+        while (!this->heap.empty()) {
+            sorted[index] = this->heap.remove();
+            --index;
         }
         return sorted;
     }
