@@ -1,14 +1,14 @@
 #include <cassert>
 
 #include "Heap.h"
-#ifndef HEAP_SORT
-#define HEAP_SORT
+#ifndef MAX_HEAP
+#define MAX_HEAP
 using namespace std;
 
 template <class T>
-class HeapSort: public Heap<T> {
+class MaxHeap: public Heap<T> {
 private:
-    int size{};
+    int size;
     int lastElement;
     T* elements;
     bool isFull () {
@@ -17,10 +17,6 @@ private:
 
     bool empty () {
         return this->lastElement == 0;
-    }
-
-    int getParentIndex(int childIndex) {
-        return  (childIndex -1 ) / 2;
     }
 
     int getLeftChild(int parentIndex) {
@@ -35,6 +31,17 @@ private:
         T aux = this->elements[parentIndex];
         this->elements[parentIndex] = this->elements[childIndex];
         this->elements[childIndex] = aux;
+    }
+
+public:
+    MaxHeap(int size) {
+        this->elements = new T[size];
+        this->size = size;
+        this->lastElement = 0;
+    }
+
+    int getParentIndex(int childIndex) {
+        return  (childIndex -1 ) / 2;
     }
 
     void bubbleUp(int index) {
@@ -69,13 +76,6 @@ private:
         }
     }
 
-public:
-    HeapSort(int size) {
-        this->elements = new T[size];
-        this->size = size;
-        this->lastElement = 0;
-    }
-
     void insert(T value) override {
         assert(!this->isFull());
         this->elements[this->lastElement] = value;
@@ -88,17 +88,43 @@ public:
         return this->elements[0];
     }
 
-    void remove() override {}
-
-    T* sort() {
+    T remove() override {
         assert(!this->empty());
-        for (int i = this->size - 1; i > 0; i--) {
-            T aux = this->elements[0];
-            this->elements[0] = this->elements[i];
-            this->elements[i] = aux;
-            this->bubbleDown(i, 0);
+        T value = this->elements[0];
+        this->swap(0, this->lastElement - 1);
+        --this->lastElement;
+        this->bubbleDown(0, 0);// TODO CHECK THIS
+        return value;
+    }
+
+    bool exists(T value) override {
+        bool exists = false;
+        for (int i = 0; i < this->lastElement && !exists; ++i) {
+            exists = this->elements[i] == value;
         }
-        return this->elements;
+        return exists;
+    }
+
+    int indexOf(T value) override {
+        int index = -1;
+        for (int i = 0; i < this->lastElement && index < 0; ++i) {
+            if (this->elements[i] == value) {
+                index = i;
+            }
+        }
+        return index;
+    }
+
+    T& get(int index) override {
+        assert(index >= 0 && index < this->lastElement);
+        return this->elements[index];
+    }
+
+    void showHeap()  {
+        cout << "showHeap" << endl;
+        for (int i = 0; i < this->lastElement; ++i) {
+            cout << "ID:" << this->elements[i].id << " Priority: " << this->elements[i].priority << endl;
+        }
     }
 };
 

@@ -29,4 +29,10 @@ add_executable(estructuras_datos_algoritmos_2
     ejercicio6.cpp
     ejercicio7.cpp
     ejercicio8.cpp
-    ejercicio9.cpp)
+    ejercicio9.cpp
+        tads/ExtendedPriorityQueue.cpp
+        tads/PriorityQueue.h
+        tads/MaxHeap.cpp
+        models/Priority.h
+        models/Order.cpp
+        tads/MinHeap.cpp)
